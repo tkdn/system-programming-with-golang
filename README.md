@@ -1,1 +1,3 @@
-# system-programming-with-golang
+# Go ならわかるシステムプログラミング
+
+問題などを解いたやつ
