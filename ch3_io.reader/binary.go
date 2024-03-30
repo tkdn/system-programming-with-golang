@@ -34,6 +34,11 @@ func dumpChunk(chunk io.Reader) {
 	buff := make([]byte, 4)
 	chunk.Read(buff)
 	fmt.Printf("chunk %q (%d bytes)\n", string(buff), length)
+	if bytes.Equal(buff, []byte("tEXt")) {
+		rawText := make([]byte, length)
+		chunk.Read(rawText)
+		fmt.Println(string(rawText))
+	}
 }
 
 func textChunk(text string) io.Reader {
