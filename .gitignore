@@ -22,3 +22,6 @@ go.work
 
 .temp/*
 !.temp/.gitkeep
+
+*/.temp/*
+!*/.temp/.gitkeep
