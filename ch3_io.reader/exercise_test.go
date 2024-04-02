@@ -2,6 +2,8 @@ package ch3ioreader_test
 
 import (
 	"archive/zip"
+	"bytes"
+	"crypto/rand"
 	"fmt"
 	"io"
 	"os"
@@ -57,6 +59,28 @@ func TestCreateZip(t *testing.T) {
 		if f.Name != files[i] {
 			t.Errorf("file name not mathed: want: %#v, but got: %#v", files[i], f.Name)
 		}
+	}
+}
+
+func TestCopyN(t *testing.T) {
+	w := os.Stdout
+	size, err := ch3ioreader.CopyN(w, rand.Reader, 64)
+	if err != nil {
+		t.Errorf("error: %v", err)
+	}
+	if size != 64 {
+		t.Errorf("size is not matched: %v", err)
+	}
+}
+
+func TestStream(t *testing.T) {
+	var buff bytes.Buffer
+	want := "ASCII"
+	stream := ch3ioreader.Stream()
+	buff.ReadFrom(stream)
+	got := buff.String()
+	if want != got {
+		t.Errorf("not matched... \nwant: %v\nbut got: %v", want, got)
 	}
 }
 

@@ -94,3 +94,34 @@ func ZipServe() {
 	http.Handle("/zip", handler)
 	http.ListenAndServe(":8080", nil)
 }
+
+func CopyN(dest io.Writer, src io.Reader, size int) (int64, error) {
+	lr := io.LimitReader(src, int64(size))
+	w, err := io.Copy(dest, lr)
+	if err != nil {
+		return w, err
+	}
+	return w, nil
+}
+
+func Stream() io.Reader {
+	var (
+		computer    = strings.NewReader("COMPUTER")
+		system      = strings.NewReader("SYSTEM")
+		programming = strings.NewReader("PROGRAMMING")
+	)
+	var stream io.Reader
+
+	c := io.LimitReader(computer, 1)
+	s := io.LimitReader(system, 1)
+	a := io.NewSectionReader(programming, 5, 1)
+	i, pw := io.Pipe()
+	mWriter := io.MultiWriter(pw, pw)
+	go func() {
+		io.Copy(mWriter, io.NewSectionReader(programming, 8, 1))
+		pw.Close()
+	}()
+	stream = io.MultiReader(a, s, c, i)
+
+	return stream
+}
